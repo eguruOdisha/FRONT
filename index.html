@@ -16,15 +16,11 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0e27;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 16px;
             overflow-x: hidden;
             position: relative;
         }
         
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -34,8 +30,7 @@
             height: 100%;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(79, 172, 254, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+                radial-gradient(circle at 80% 70%, rgba(79, 172, 254, 0.15) 0%, transparent 50%);
             z-index: 0;
             animation: bgShift 15s ease-in-out infinite;
         }
@@ -45,11 +40,10 @@
             50% { opacity: 0.7; }
         }
         
-        /* Floating particles */
         .particle {
             position: fixed;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             pointer-events: none;
@@ -58,149 +52,75 @@
         }
         
         @keyframes float-particle {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px) scale(1); opacity: 0; }
+        }
+        
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .page.active {
+            display: block;
+            animation: pageSlideIn 0.5s ease-out;
+        }
+        
+        @keyframes pageSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .container {
-            width: 100%;
             max-width: 420px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            position: relative;
-            z-index: 10;
-            animation: containerFadeIn 1s ease-out;
+            gap: 20px;
         }
         
-        @keyframes containerFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Audio Control Card - Now at top with integrated button */
+        /* Audio Card */
         .audio-card {
             background: linear-gradient(145deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 20px 24px;
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 20px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .audio-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        
-        .audio-card:active::before {
-            opacity: 1;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .audio-card.playing {
             background: linear-gradient(145deg, rgba(102, 126, 234, 0.35), rgba(118, 75, 162, 0.35));
-            box-shadow: 
-                0 16px 50px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.15);
             animation: pulse-glow 2s ease-in-out infinite;
         }
         
         @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 
-                    0 16px 50px rgba(102, 126, 234, 0.4),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                    0 0 0 1px rgba(255, 255, 255, 0.15);
-            }
-            50% {
-                box-shadow: 
-                    0 20px 60px rgba(102, 126, 234, 0.6),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-                    0 0 0 1px rgba(255, 255, 255, 0.2);
-            }
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0%, 100% { box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6); }
         }
         
         .audio-content {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
         
         .audio-icon {
-            width: 56px;
-            height: 56px;
-            min-width: 56px;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .audio-card.playing .audio-icon {
-            animation: rotate-pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes rotate-pulse {
-            0%, 100% {
-                transform: scale(1) rotate(0deg);
-            }
-            25% {
-                transform: scale(1.1) rotate(5deg);
-            }
-            50% {
-                transform: scale(1) rotate(0deg);
-            }
-            75% {
-                transform: scale(1.1) rotate(-5deg);
-            }
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         .audio-text {
@@ -209,26 +129,24 @@
         
         .audio-title {
             color: white;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 4px;
         }
         
         .audio-subtitle {
             color: rgba(255, 255, 255, 0.85);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
         }
         
         .audio-progress {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 3px;
             overflow: hidden;
-            margin-top: 16px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            margin-top: 12px;
         }
         
         .audio-progress-bar {
@@ -236,537 +154,825 @@
             background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
             width: 0%;
             transition: width 0.1s linear;
-            border-radius: 3px;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
         }
         
-        /* Welcome Image Container */
+        /* Image Container */
         .image-container {
             position: relative;
             width: 100%;
-            padding: 20px;
+            padding: 16px;
             background: linear-gradient(145deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
-            border-radius: 28px;
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            animation: imageZoomIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
-            overflow: hidden;
-        }
-        
-        .image-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-            50%, 100% {
-                left: 100%;
-            }
-        }
-        
-        @keyframes imageZoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
         
         .welcome-image {
             width: 100%;
             height: auto;
-            border-radius: 20px;
+            border-radius: 16px;
             display: block;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             animation: float 4s ease-in-out infinite;
-            position: relative;
-            z-index: 1;
         }
         
         @keyframes float {
-            0%, 100% { 
-                transform: translateY(0px) scale(1); 
-            }
-            50% { 
-                transform: translateY(-12px) scale(1.02); 
-            }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
         
-        /* Buttons */
+        /* Main Buttons */
         .btn {
             position: relative;
-            padding: 24px 28px;
-            font-size: 18px;
+            padding: 20px 24px;
+            font-size: 17px;
             font-weight: 700;
             text-decoration: none;
             text-align: left;
-            border-radius: 22px;
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
-            gap: 18px;
-            -webkit-user-select: none;
-            user-select: none;
-            transform: translateY(0);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 16px;
             backdrop-filter: blur(10px);
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn::after {
-            content: '→';
-            position: absolute;
-            right: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            opacity: 0.8;
-            transition: all 0.3s ease;
         }
         
         .btn:active {
             transform: scale(0.97);
         }
         
-        .btn:active::before {
-            width: 400px;
-            height: 400px;
-        }
-        
-        .btn:active::after {
-            transform: translateY(-50%) translateX(5px);
-        }
-        
         .btn-education {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
             color: #fff;
-            animation: slideInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
         }
         
         .btn-social {
             background: linear-gradient(135deg, rgba(79, 172, 254, 0.9) 0%, rgba(0, 242, 254, 0.9) 100%);
             color: #fff;
-            animation: slideInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s both;
-        }
-        
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-60px) rotate(-5deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) rotate(0);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(60px) rotate(5deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) rotate(0);
-            }
         }
         
         .btn-icon {
-            font-size: 42px;
-            min-width: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            font-size: 38px;
+            min-width: 38px;
         }
         
         .btn-content {
             flex: 1;
-            padding-right: 30px;
         }
         
         .btn-title {
             display: block;
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 3px;
         }
         
         .btn-subtitle {
             display: block;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             opacity: 0.95;
         }
         
-        /* Mobile Optimizations */
-        @media (max-width: 480px) {
-            body {
-                padding: 16px;
-            }
-            
-            .container {
-                gap: 20px;
-            }
-            
-            .audio-card {
-                padding: 18px 20px;
-            }
-            
-            .audio-icon {
-                width: 52px;
-                height: 52px;
-                min-width: 52px;
-                font-size: 26px;
-            }
-            
-            .audio-title {
-                font-size: 16px;
-            }
-            
-            .audio-subtitle {
-                font-size: 12px;
-            }
-            
-            .image-container {
-                padding: 16px;
-            }
-            
-            .btn {
-                padding: 20px 24px;
-                font-size: 17px;
-                gap: 16px;
-            }
-            
-            .btn-icon {
-                font-size: 38px;
-            }
-            
-            .btn-title {
-                font-size: 18px;
-            }
-            
-            .btn-subtitle {
-                font-size: 14px;
-            }
-            
-            .btn::after {
-                font-size: 22px;
-                right: 20px;
-            }
+        /* Back Button */
+        .back-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
         }
         
-        @media (max-width: 360px) {
-            .container {
-                gap: 18px;
-            }
-            
-            .audio-card {
-                padding: 16px 18px;
-            }
-            
-            .audio-icon {
-                width: 48px;
-                height: 48px;
-                min-width: 48px;
-                font-size: 24px;
-            }
-            
-            .audio-title {
-                font-size: 15px;
-            }
-            
-            .audio-subtitle {
-                font-size: 11px;
-            }
-            
-            .image-container {
-                padding: 14px;
-            }
-            
-            .btn {
-                padding: 18px 20px;
-                font-size: 16px;
-                gap: 14px;
-            }
-            
-            .btn-icon {
-                font-size: 36px;
-            }
-            
-            .btn-title {
-                font-size: 17px;
-            }
-            
-            .btn-subtitle {
-                font-size: 13px;
-            }
-            
-            .btn::after {
-                font-size: 20px;
-                right: 18px;
-            }
+        .back-btn:active {
+            transform: scale(0.95);
         }
         
-        /* Landscape mode adjustments */
-        @media (max-height: 600px) and (orientation: landscape) {
-            body {
-                padding: 12px;
-            }
-            
-            .container {
-                gap: 16px;
-                max-width: 90vw;
-            }
-            
-            .audio-card {
-                padding: 14px 18px;
-            }
-            
-            .image-container {
-                padding: 12px;
-            }
-            
-            .btn {
-                padding: 16px 20px;
-            }
+        /* Category Cards */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 12px;
+        }
+        
+        .category-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.35), rgba(118, 75, 162, 0.35));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 130px;
+        }
+        
+        .category-card:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.45), rgba(118, 75, 162, 0.45));
+        }
+        
+        .category-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .category-name {
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+        
+        /* Subject Grid */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .subject-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 14px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85px;
+        }
+        
+        .subject-card:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
+        }
+        
+        .subject-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .subject-name {
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        /* Page Title */
+        .page-title {
+            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Social Help Buttons */
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .social-btn {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            padding: 16px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .social-btn:active {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.4), rgba(0, 242, 254, 0.4));
+        }
+        
+        .social-btn-icon {
+            font-size: 32px;
+            min-width: 32px;
+        }
+        
+        .social-btn-text {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        
+        /* Scrollable container for subjects */
+        .subjects-container {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        
+        .subjects-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .subjects-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        
+        .subjects-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        /* View switching */
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+            animation: viewSlideIn 0.4s ease-out;
+        }
+        
+        @keyframes viewSlideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Create floating particles -->
     <script>
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 15; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
             document.body.appendChild(particle);
         }
     </script>
     
-    <div class="container">
-        <!-- Audio Control Card at Top -->
-        <div class="audio-card" id="audioCard">
-            <div class="audio-content">
-                <div class="audio-icon" id="audioIcon">🔇</div>
-                <div class="audio-text">
-                    <div class="audio-title">ଶୁଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ</div>
-                    <div class="audio-subtitle" id="audioStatus">Tap to play audio</div>
+    <!-- HOME PAGE -->
+    <div class="page active" id="homePage">
+        <div class="container">
+            <div class="audio-card" id="homeAudioCard">
+                <div class="audio-content">
+                    <div class="audio-icon" id="homeAudioIcon">🔇</div>
+                    <div class="audio-text">
+                        <div class="audio-title">ଶୁଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ</div>
+                        <div class="audio-subtitle" id="homeAudioStatus">Tap to play audio</div>
+                    </div>
+                </div>
+                <div class="audio-progress">
+                    <div class="audio-progress-bar" id="homeProgressBar"></div>
                 </div>
             </div>
-            <div class="audio-progress">
-                <div class="audio-progress-bar" id="progressBar"></div>
+            
+            <div class="image-container">
+                <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" 
+                     alt="Welcome" 
+                     class="welcome-image"
+                     loading="eager">
+            </div>
+            
+            <button class="btn btn-education" onclick="showPage('educationPage')">
+                <span class="btn-icon">📚</span>
+                <span class="btn-content">
+                    <span class="btn-title">Educational Help</span>
+                    <span class="btn-subtitle">ଶିକ୍ଷା ସମ୍ବନ୍ଧୀୟ ସହାୟତା</span>
+                </span>
+            </button>
+            
+            <button class="btn btn-social" onclick="showPage('socialPage')">
+                <span class="btn-icon">🤝</span>
+                <span class="btn-content">
+                    <span class="btn-title">Social Help</span>
+                    <span class="btn-subtitle">ସାମାଜିକ ସହାୟତା</span>
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- EDUCATION PAGE -->
+    <div class="page" id="educationPage">
+        <div class="container">
+            <button class="back-btn" onclick="handleEducationBack()">
+                <span>←</span>
+                <span id="eduBackText">Back to Home</span>
+            </button>
+            
+            <div class="audio-card" id="eduAudioCard">
+                <div class="audio-content">
+                    <div class="audio-icon" id="eduAudioIcon">🔇</div>
+                    <div class="audio-text">
+                        <div class="audio-title">ଶିକ୍ଷା ସହାୟତା ଶୁଣନ୍ତୁ</div>
+                        <div class="audio-subtitle" id="eduAudioStatus">Tap to play audio</div>
+                    </div>
+                </div>
+                <div class="audio-progress">
+                    <div class="audio-progress-bar" id="eduProgressBar"></div>
+                </div>
+            </div>
+            
+            <!-- CATEGORIES VIEW -->
+            <div class="view active" id="categoriesView">
+                <div class="page-title">📚 Select Category</div>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="showCategorySubjects('law')">
+                        <div class="category-icon">⚖️</div>
+                        <div class="category-name">Law Subjects</div>
+                    </div>
+                    <div class="category-card" onclick="showCategorySubjects('commerce')">
+                        <div class="category-icon">💼</div>
+                        <div class="category-name">Commerce Subjects</div>
+                    </div>
+                    <div class="category-card" onclick="showCategorySubjects('arts')">
+                        <div class="category-icon">🎨</div>
+                        <div class="category-name">Arts Subjects</div>
+                    </div>
+                    <div class="category-card" onclick="showCategorySubjects('others')">
+                        <div class="category-icon">📝</div>
+                        <div class="category-name">Other Subjects</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LAW SUBJECTS VIEW -->
+            <div class="view" id="lawView">
+                <div class="page-title">⚖️ Law Subjects</div>
+                <div class="subjects-container">
+                    <div class="subjects-grid">
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'BNSS')">
+                            <div class="subject-icon">📖</div>
+                            <div class="subject-name">BNSS</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'BNS')">
+                            <div class="subject-icon">⚖️</div>
+                            <div class="subject-name">BNS</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'BSA')">
+                            <div class="subject-icon">📜</div>
+                            <div class="subject-name">BSA</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Constitutional Law')">
+                            <div class="subject-icon">🏛️</div>
+                            <div class="subject-name">Constitutional Law</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'CPC')">
+                            <div class="subject-icon">⚖️</div>
+                            <div class="subject-name">CPC</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COMMERCE SUBJECTS VIEW -->
+            <div class="view" id="commerceView">
+                <div class="page-title">💼 Commerce Subjects</div>
+                <div class="subjects-container">
+                    <div class="subjects-grid">
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Accounting-I')">
+                            <div class="subject-icon">📊</div>
+                            <div class="subject-name">Accounting-I</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Accounting-II')">
+                            <div class="subject-icon">📊</div>
+                            <div class="subject-name">Accounting-II</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'BSM')">
+                            <div class="subject-icon">📈</div>
+                            <div class="subject-name">BSM</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'BMS')">
+                            <div class="subject-icon">💼</div>
+                            <div class="subject-name">BMS</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'FMA')">
+                            <div class="subject-icon">💰</div>
+                            <div class="subject-name">FMA</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'FCA')">
+                            <div class="subject-icon">💵</div>
+                            <div class="subject-name">FCA</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'IT')">
+                            <div class="subject-icon">💻</div>
+                            <div class="subject-name">IT</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Financial Accounting')">
+                            <div class="subject-icon">💳</div>
+                            <div class="subject-name">Financial Accounting</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Cost Accounting')">
+                            <div class="subject-icon">📉</div>
+                            <div class="subject-name">Cost Accounting</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Management Accounting')">
+                            <div class="subject-icon">📋</div>
+                            <div class="subject-name">Management Accounting</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Business Law')">
+                            <div class="subject-icon">⚖️</div>
+                            <div class="subject-name">Business Law</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Company Law')">
+                            <div class="subject-icon">🏢</div>
+                            <div class="subject-name">Company Law</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Income Tax')">
+                            <div class="subject-icon">💰</div>
+                            <div class="subject-name">Income Tax</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'GST')">
+                            <div class="subject-icon">🧾</div>
+                            <div class="subject-name">Goods & Service Tax</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ARTS SUBJECTS VIEW -->
+            <div class="view" id="artsView">
+                <div class="page-title">🎨 Arts Subjects</div>
+                <div class="subjects-container">
+                    <div class="subjects-grid">
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Political Science-I')">
+                            <div class="subject-icon">🗳️</div>
+                            <div class="subject-name">Political Science-I</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Political Science-II')">
+                            <div class="subject-icon">🗳️</div>
+                            <div class="subject-name">Political Science-II</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Economics-I')">
+                            <div class="subject-icon">📈</div>
+                            <div class="subject-name">Economics-I</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'Economics-II')">
+                            <div class="subject-icon">📊</div>
+                            <div class="subject-name">Economics-II</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'History-I')">
+                            <div class="subject-icon">🏛️</div>
+                            <div class="subject-name">History-I</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'History-II')">
+                            <div class="subject-icon">📜</div>
+                            <div class="subject-name">History-II</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OTHER SUBJECTS VIEW -->
+            <div class="view" id="othersView">
+                <div class="page-title">📝 Other Subjects</div>
+                <div class="subjects-container">
+                    <div class="subjects-grid">
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'English-I')">
+                            <div class="subject-icon">📖</div>
+                            <div class="subject-name">English-I</div>
+                        </a>
+                        <a href="#" class="subject-card" onclick="openSubject(event, 'English-II')">
+                            <div class="subject-icon">📚</div>
+                            <div class="subject-name">English-II</div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Welcome Image with Container -->
-        <div class="image-container">
-            <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" 
-                 alt="Welcome" 
-                 class="welcome-image"
-                 loading="eager">
+    </div>
+    
+    <!-- SOCIAL HELP PAGE -->
+    <div class="page" id="socialPage">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('homePage')">
+                <span>←</span>
+                <span>Back to Home</span>
+            </button>
+            
+            <div class="audio-card" id="socialAudioCard">
+                <div class="audio-content">
+                    <div class="audio-icon" id="socialAudioIcon">🔇</div>
+                    <div class="audio-text">
+                        <div class="audio-title">ସାମାଜିକ ସହାୟତା ଶୁଣନ୍ତୁ</div>
+                        <div class="audio-subtitle" id="socialAudioStatus">Tap to play audio</div>
+                    </div>
+                </div>
+                <div class="audio-progress">
+                    <div class="audio-progress-bar" id="socialProgressBar"></div>
+                </div>
+            </div>
+            
+            <div class="page-title">🤝 Social Help Services</div>
+            
+            <div class="social-buttons">
+                <a href="#" class="social-btn" onclick="openSocialHelp(event, 'justice')">
+                    <span class="social-btn-icon">⚖️</span>
+                    <span class="social-btn-text">ନ୍ୟାୟ ପାଇଁ ଅନ୍-ଲାଇନ୍ ସହାୟତା</span>
+                </a>
+                
+                <a href="#" class="social-btn" onclick="openSocialHelp(event, 'government')">
+                    <span class="social-btn-icon">🏛️</span>
+                    <span class="social-btn-text">ସରକାରଙ୍କ ସହିତ ଯୋଗାଯୋଗ ପାଇଁ ଅନ୍-ଲାଇନ୍ ବ୍ୟବସ୍ଥା</span>
+                </a>
+                
+                <a href="#" class="social-btn" onclick="openSocialHelp(event, 'newspaper')">
+                    <span class="social-btn-icon">📰</span>
+                    <span class="social-btn-text">ଦୈନିକ ଖବରକାଗଜ ପଢିବା ପାଇଁ ଅନ୍-ଲାଇନ୍ ବ୍ୟବସ୍ଥା</span>
+                </a>
+                
+                <a href="#" class="social-btn" onclick="openSocialHelp(event, 'spiritual')">
+                    <span class="social-btn-icon">🕉️</span>
+                    <span class="social-btn-text">ଜ୍ଯୋତିଷଶାସ୍ତ୍ର ଏବଂ ଆଧ୍ୟାତ୍ମିକ ଜ୍ଞାନ ବୃଦ୍ଧି ପାଇଁ ଅନ୍-ଲାଇନ୍ ବ୍ୟବସ୍ଥା</span>
+                </a>
+            </div>
         </div>
-        
-        <a href="https://sites.google.com/view/ospage2/%E0%AC%86%E0%AC%AE-%E0%AC%B6%E0%AC%95%E0%AC%B7" 
-           class="btn btn-education">
-            <span class="btn-icon">📚</span>
-            <span class="btn-content">
-                <span class="btn-title">Educational Help</span>
-                <span class="btn-subtitle">ଶିକ୍ଷା ସମ୍ବନ୍ଧୀୟ ସହାୟତା</span>
-            </span>
-        </a>
-        
-        <a href="https://sites.google.com/view/ospage2/home" 
-           class="btn btn-social">
-            <span class="btn-icon">🤝</span>
-            <span class="btn-content">
-                <span class="btn-title">Social Help</span>
-                <span class="btn-subtitle">ସାମାଜିକ ସହାୟତା</span>
-            </span>
-        </a>
     </div>
 
     <script>
-        // Audio configuration
-        const audioUrl = 'https://raw.githubusercontent.com/eguruOdisha/FRONT/main/ospage1.mp3';
-        const audioCard = document.getElementById('audioCard');
-        const audioIcon = document.getElementById('audioIcon');
-        const audioStatus = document.getElementById('audioStatus');
-        const progressBar = document.getElementById('progressBar');
-        
-        // Create audio element
-        const audio = new Audio();
-        audio.crossOrigin = 'anonymous';
-        audio.preload = 'metadata';
-        
-        let isPlaying = false;
-        let audioLoaded = false;
-        
-        // Load audio
-        function loadAudio() {
-            if (!audioLoaded) {
-                audio.src = audioUrl;
-                audio.load();
-                audioLoaded = true;
+        // Audio managers for each page
+        const audioManagers = {
+            home: {
+                url: 'https://raw.githubusercontent.com/eguruOdisha/FRONT/main/ospage1.mp3',
+                audio: new Audio(),
+                card: null,
+                icon: null,
+                status: null,
+                progress: null,
+                isPlaying: false,
+                loaded: false
+            },
+            education: {
+                url: 'https://raw.githubusercontent.com/eguruOdisha/FRONT/main/education-audio.mp3',
+                audio: new Audio(),
+                card: null,
+                icon: null,
+                status: null,
+                progress: null,
+                isPlaying: false,
+                loaded: false
+            },
+            social: {
+                url: 'https://raw.githubusercontent.com/eguruOdisha/FRONT/main/social-audio.mp3',
+                audio: new Audio(),
+                card: null,
+                icon: null,
+                status: null,
+                progress: null,
+                isPlaying: false,
+                loaded: false
             }
-        }
+        };
         
-        // Update progress bar
-        function updateProgress() {
-            if (audio.duration && !isNaN(audio.duration)) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-            }
-        }
-        
-        // Toggle play/pause
-        function togglePlayPause() {
-            if (!audioLoaded) {
-                loadAudio();
-            }
+        // Initialize audio managers
+        function initAudioManager(type, cardId, iconId, statusId, progressId) {
+            const manager = audioManagers[type];
+            manager.card = document.getElementById(cardId);
+            manager.icon = document.getElementById(iconId);
+            manager.status = document.getElementById(statusId);
+            manager.progress = document.getElementById(progressId);
             
-            if (isPlaying) {
-                audio.pause();
-                audioIcon.textContent = '🔇';
-                audioCard.classList.remove('playing');
-                audioStatus.textContent = 'Paused';
-                isPlaying = false;
-            } else {
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise
-                        .then(() => {
-                            audioIcon.textContent = '🔊';
-                            audioCard.classList.add('playing');
-                            audioStatus.textContent = 'Playing...';
-                            isPlaying = true;
-                        })
-                        .catch(error => {
-                            console.error('Audio playback failed:', error);
-                            audioStatus.textContent = 'Error - Tap again';
-                            audioIcon.textContent = '🔇';
-                        });
+            manager.audio.crossOrigin = 'anonymous';
+            manager.audio.preload = 'metadata';
+            
+            // Event listeners
+            manager.audio.addEventListener('loadstart', () => {
+                manager.status.textContent = 'Loading...';
+            });
+            
+            manager.audio.addEventListener('canplay', () => {
+                manager.status.textContent = 'Tap to play';
+            });
+            
+            manager.audio.addEventListener('timeupdate', () => {
+                if (manager.audio.duration && !isNaN(manager.audio.duration)) {
+                    const progress = (manager.audio.currentTime / manager.audio.duration) * 100;
+                    manager.progress.style.width = `${progress}%`;
                 }
+            });
+            
+            manager.audio.addEventListener('playing', () => {
+                manager.status.textContent = 'Playing...';
+                manager.isPlaying = true;
+                manager.icon.textContent = '🔊';
+                manager.card.classList.add('playing');
+            });
+            
+            manager.audio.addEventListener('pause', () => {
+                manager.status.textContent = 'Paused';
+                manager.isPlaying = false;
+                manager.icon.textContent = '🔇';
+                manager.card.classList.remove('playing');
+            });
+            
+            manager.audio.addEventListener('ended', () => {
+                manager.isPlaying = false;
+                manager.icon.textContent = '🔇';
+                manager.card.classList.remove('playing');
+                manager.progress.style.width = '0%';
+                manager.status.textContent = 'Tap to replay';
+            });
+            
+            manager.audio.addEventListener('error', (e) => {
+                console.error('Audio error:', e);
+                manager.status.textContent = 'Audio unavailable';
+                manager.icon.textContent = '❌';
+            });
+            
+            // Card click handler
+            manager.card.addEventListener('click', () => {
+                if (!manager.loaded) {
+                    manager.audio.src = manager.url;
+                    manager.audio.load();
+                    manager.loaded = true;
+                }
+                
+                if (manager.isPlaying) {
+                    manager.audio.pause();
+                } else {
+                    manager.audio.play().catch(error => {
+                        console.error('Playback failed:', error);
+                        manager.status.textContent = 'Error - Tap again';
+                    });
+                }
+            });
+        }
+        
+        // Initialize all audio managers
+        initAudioManager('home', 'homeAudioCard', 'homeAudioIcon', 'homeAudioStatus', 'homeProgressBar');
+        initAudioManager('education', 'eduAudioCard', 'eduAudioIcon', 'eduAudioStatus', 'eduProgressBar');
+        initAudioManager('social', 'socialAudioCard', 'socialAudioIcon', 'socialAudioStatus', 'socialProgressBar');
+        
+        // Page and view navigation
+        let currentPage = 'homePage';
+        let currentView = 'categoriesView';
+        
+        function showPage(pageId) {
+            // Stop all audio when changing pages
+            Object.values(audioManagers).forEach(manager => {
+                if (manager.isPlaying) {
+                    manager.audio.pause();
+                }
+            });
+            
+            // Hide current page
+            document.getElementById(currentPage).classList.remove('active');
+            
+            // Show new page
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+            
+            // Reset education view to categories when entering education page
+            if (pageId === 'educationPage') {
+                showView('categoriesView');
+                document.getElementById('eduBackText').textContent = 'Back to Home';
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function showView(viewId) {
+            // Hide current view
+            const currentViewElement = document.querySelector('#educationPage .view.active');
+            if (currentViewElement) {
+                currentViewElement.classList.remove('active');
+            }
+            
+            // Show new view
+            document.getElementById(viewId).classList.add('active');
+            currentView = viewId;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function showCategorySubjects(category) {
+            const viewMap = {
+                'law': 'lawView',
+                'commerce': 'commerceView',
+                'arts': 'artsView',
+                'others': 'othersView'
+            };
+            
+            showView(viewMap[category]);
+            document.getElementById('eduBackText').textContent = 'Back to Categories';
+        }
+        
+        function handleEducationBack() {
+            if (currentView === 'categoriesView') {
+                // Go back to home page
+                showPage('homePage');
+            } else {
+                // Go back to categories view
+                showView('categoriesView');
+                document.getElementById('eduBackText').textContent = 'Back to Home';
             }
         }
         
-        // Audio event listeners
-        audio.addEventListener('loadstart', () => {
-            audioStatus.textContent = 'Loading audio...';
-        });
+        // Subject links mapping
+        const subjectLinks = {
+            'BNSS': 'https://example.com/bnss',
+            'BNS': 'https://example.com/bns',
+            'BSA': 'https://example.com/bsa',
+            'Constitutional Law': 'https://example.com/constitutional-law',
+            'CPC': 'https://example.com/cpc',
+            'Accounting-I': 'https://example.com/accounting-1',
+            'Accounting-II': 'https://example.com/accounting-2',
+            'BSM': 'https://example.com/bsm',
+            'BMS': 'https://example.com/bms',
+            'FMA': 'https://example.com/fma',
+            'FCA': 'https://example.com/fca',
+            'IT': 'https://example.com/it',
+            'Financial Accounting': 'https://example.com/financial-accounting',
+            'Cost Accounting': 'https://example.com/cost-accounting',
+            'Management Accounting': 'https://example.com/management-accounting',
+            'Business Law': 'https://example.com/business-law',
+            'Company Law': 'https://example.com/company-law',
+            'Income Tax': 'https://example.com/income-tax',
+            'GST': 'https://example.com/gst',
+            'Political Science-I': 'https://example.com/political-science-1',
+            'Political Science-II': 'https://example.com/political-science-2',
+            'Economics-I': 'https://example.com/economics-1',
+            'Economics-II': 'https://example.com/economics-2',
+            'History-I': 'https://example.com/history-1',
+            'History-II': 'https://example.com/history-2',
+            'English-I': 'https://example.com/english-1',
+            'English-II': 'https://example.com/english-2'
+        };
         
-        audio.addEventListener('loadedmetadata', () => {
-            audioStatus.textContent = 'Ready to play';
-        });
+        // Social help links mapping
+        const socialLinks = {
+            'justice': 'https://example.com/justice-help',
+            'government': 'https://example.com/government-contact',
+            'newspaper': 'https://example.com/newspapers',
+            'spiritual': 'https://example.com/spiritual-knowledge'
+        };
         
-        audio.addEventListener('canplay', () => {
-            audioStatus.textContent = 'Tap to play';
-        });
+        // Open subject in new window
+        function openSubject(event, subjectName) {
+            event.preventDefault();
+            const url = subjectLinks[subjectName] || 'https://example.com/subject-not-found';
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
         
-        audio.addEventListener('timeupdate', updateProgress);
+        // Open social help in new window
+        function openSocialHelp(event, helpType) {
+            event.preventDefault();
+            const url = socialLinks[helpType] || 'https://example.com/help-not-found';
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
         
-        audio.addEventListener('playing', () => {
-            audioStatus.textContent = 'Playing...';
-            isPlaying = true;
-        });
-        
-        audio.addEventListener('pause', () => {
-            audioStatus.textContent = 'Paused';
-            isPlaying = false;
-        });
-        
-        audio.addEventListener('ended', () => {
-            isPlaying = false;
-            audioIcon.textContent = '🔇';
-            audioCard.classList.remove('playing');
-            progressBar.style.width = '0%';
-            audioStatus.textContent = 'Finished';
-            
-            // Reset after a moment
-            setTimeout(() => {
-                audioStatus.textContent = 'Tap to replay';
-            }, 1500);
-        });
-        
-        audio.addEventListener('error', (e) => {
-            console.error('Audio error:', e);
-            audioStatus.textContent = 'Audio unavailable';
-            audioIcon.textContent = '❌';
-            
-            // Try alternative URL
-            if (audio.src.includes('raw.githubusercontent')) {
-                audio.src = 'https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3';
-                audio.load();
-            }
-        });
-        
-        // Audio card click
-        audioCard.addEventListener('click', (e) => {
-            e.preventDefault();
-            togglePlayPause();
-        });
-        
-        // Load audio on first interaction
-        document.addEventListener('click', () => {
-            if (!audioLoaded) {
-                loadAudio();
-            }
-        }, { once: true });
-        
-        // Pause when page hidden
+        // Pause audio when page hidden
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                audioIcon.textContent = '🔇';
-                audioCard.classList.remove('playing');
+            if (document.hidden) {
+                Object.values(audioManagers).forEach(manager => {
+                    if (manager.isPlaying) {
+                        manager.audio.pause();
+                    }
+                });
             }
-        });
-        
-        // Cleanup on unload
-        window.addEventListener('beforeunload', () => {
-            audio.pause();
-            audio.currentTime = 0;
         });
         
         // Enhanced touch feedback
-        document.querySelectorAll('.btn, .audio-card').forEach(el => {
+        document.querySelectorAll('.btn, .audio-card, .subject-card, .category-card, .social-btn, .back-btn').forEach(el => {
             el.addEventListener('touchstart', () => {
-                el.style.transform = 'scale(0.97)';
+                el.style.transform = 'scale(0.95)';
             });
             el.addEventListener('touchend', () => {
                 el.style.transform = 'scale(1)';
