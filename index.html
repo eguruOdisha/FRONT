@@ -19,7 +19,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 80px 20px 20px;
+            padding: 100px 20px 20px;
             overflow-x: hidden;
             position: relative;
         }
@@ -27,18 +27,12 @@
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, #16213e 0%, #0f3460 50%, #1a1a2e 100%);
-            animation: rotate 20s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top left, #16213e 0%, #0f3460 50%, #1a1a2e 100%);
             z-index: 0;
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
         
         .glow {
@@ -81,17 +75,95 @@
             z-index: 10;
         }
         
-        /* Welcome Image */
-        .welcome-image {
+        /* Audio Instruction Text */
+        .audio-instruction {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.05);
+            }
+            70% {
+                transform: translateX(-50%) scale(0.9);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+        
+        .audio-instruction::before {
+            content: '👆';
+            font-size: 18px;
+            animation: pointDown 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pointDown {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(3px);
+            }
+        }
+        
+        /* Welcome Image Container */
+        .image-container {
+            position: relative;
             width: 100%;
             max-width: 300px;
+            margin: 0 auto 20px;
+            padding: 15px;
+            background: linear-gradient(145deg, rgba(102, 126, 234, 0.15), rgba(79, 172, 254, 0.15));
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .welcome-image {
+            width: 100%;
             height: auto;
             border-radius: 16px;
-            margin: 0 auto 15px;
             display: block;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             animation: float 3s ease-in-out infinite;
-            background: rgba(255, 255, 255, 0.1);
         }
         
         @keyframes float {
@@ -109,27 +181,75 @@
             text-align: center;
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             border: none;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             display: block;
             -webkit-user-select: none;
             user-select: none;
+            transform: translateY(0);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn:active {
-            transform: scale(0.98);
+            transform: translateY(-2px) scale(0.98);
         }
         
         .btn-education {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
+            animation: slideInLeft 0.6s ease-out 0.2s both;
         }
         
         .btn-social {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: #fff;
+            animation: slideInRight 0.6s ease-out 0.4s both;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         .btn-icon {
@@ -142,6 +262,8 @@
         .btn-text {
             display: inline-block;
             vertical-align: middle;
+            position: relative;
+            z-index: 1;
         }
         
         .btn-subtitle {
@@ -246,7 +368,7 @@
         /* Mobile Optimizations */
         @media (max-width: 480px) {
             body {
-                padding: 70px 15px 15px;
+                padding: 90px 15px 15px;
             }
             
             .container {
@@ -254,8 +376,9 @@
                 gap: 18px;
             }
             
-            .welcome-image {
-                max-width: 260px;
+            .image-container {
+                max-width: 280px;
+                padding: 12px;
             }
             
             .btn {
@@ -271,23 +394,30 @@
                 font-size: 14px;
             }
             
+            .audio-instruction {
+                font-size: 12px;
+                padding: 10px 20px;
+                top: 15px;
+            }
+            
             .audio-toggle {
                 width: 50px;
                 height: 50px;
                 font-size: 24px;
-                top: 15px;
+                top: 60px;
                 right: 15px;
             }
             
             .audio-mini {
-                top: 75px;
+                top: 120px;
                 right: 15px;
             }
         }
         
         @media (max-width: 360px) {
-            .welcome-image {
-                max-width: 220px;
+            .image-container {
+                max-width: 240px;
+                padding: 10px;
             }
             
             .btn {
@@ -303,10 +433,20 @@
                 font-size: 13px;
             }
             
+            .audio-instruction {
+                font-size: 11px;
+                padding: 8px 16px;
+            }
+            
             .audio-toggle {
                 width: 48px;
                 height: 48px;
                 font-size: 22px;
+                top: 55px;
+            }
+            
+            .audio-mini {
+                top: 110px;
             }
         }
     </style>
@@ -314,6 +454,9 @@
 <body>
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
+    
+    <!-- Audio Instruction Text -->
+    <div class="audio-instruction">ଶୁଣିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ</div>
     
     <!-- Audio Toggle Button -->
     <button class="audio-toggle" id="audioToggle" aria-label="Toggle Audio">🔇</button>
@@ -327,11 +470,13 @@
     </div>
     
     <div class="container">
-        <!-- Welcome Image -->
-        <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" 
-             alt="Welcome" 
-             class="welcome-image"
-             loading="eager">
+        <!-- Welcome Image with Container -->
+        <div class="image-container">
+            <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" 
+                 alt="Welcome" 
+                 class="welcome-image"
+                 loading="eager">
+        </div>
         
         <a href="https://sites.google.com/view/bhadrak-tihidi-paliabindhaa/%E0%AC%86%E0%AC%AE-%E0%AC%B6%E0%AC%95%E0%AC%B7" 
            class="btn btn-education">
