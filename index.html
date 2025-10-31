@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Help Portal</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;padding-top:80px}
         body::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,#16213e 0%,#0f3460 50%,#1a1a2e 100%);animation:rotate 20s linear infinite;z-index:0}
         @keyframes rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
         .container{width:100%;max-width:420px;display:flex;flex-direction:column;gap:24px;position:relative;z-index:1}
+        .welcome-image{width:100%;max-width:350px;height:auto;border-radius:20px;margin:0 auto 32px;display:block;box-shadow:0 20px 60px rgba(0,0,0,.4);border:3px solid rgba(255,255,255,.1);animation:float 4s ease-in-out infinite;animation-delay:.5s}
         .btn{position:relative;padding:32px 40px;font-size:20px;font-weight:700;text-decoration:none;text-align:center;border-radius:24px;overflow:hidden;transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:none;box-shadow:0 20px 60px rgba(0,0,0,.3);backdrop-filter:blur(10px);display:block}
         .btn:active{transform:scale(.97)}
         .btn-education{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
@@ -21,9 +22,12 @@
         .btn-text{display:inline-block;vertical-align:middle;text-shadow:2px 2px 4px rgba(0,0,0,.2)}
         .btn-subtitle{display:block;font-size:21px;font-weight:700;margin-top:6px;opacity:.95}
         @media (max-width:480px){
-            .btn{padding:28px 32px;font-size:18px}
-            .btn-icon{font-size:26px}
-            .btn-subtitle{font-size:18px}
+            body{padding:15px;padding-top:70px}
+            .container{gap:16px;max-width:100%}
+            .welcome-image{max-width:100%;margin-bottom:24px;border-radius:16px}
+            .btn{padding:24px 28px;font-size:17px}
+            .btn-icon{font-size:24px;margin-right:8px}
+            .btn-subtitle{font-size:16px;margin-top:4px}
         }
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         .container{animation:float 4s ease-in-out infinite}
@@ -32,22 +36,28 @@
         .glow-2{background:#4facfe;bottom:-100px;right:-100px;animation:pulse 3s ease-in-out infinite 1.5s}
         @keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
         
-        /* Audio player styles */
+        /* Audio player styles - Upper right corner */
         .audio-player {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            top: 15px;
+            right: 15px;
             background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(15px);
-            border-radius: 50px;
-            padding: 15px 25px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             z-index: 100;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             transition: all 0.3s ease;
+        }
+        
+        .audio-player:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
         }
         
         .audio-control {
@@ -63,61 +73,55 @@
             color: white;
             font-size: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .audio-control:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
         }
         
         .audio-control:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
         
-        .audio-info {
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            max-width: 150px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-        
-        .audio-progress {
-            width: 120px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .audio-progress-bar {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.1s linear;
-            border-radius: 3px;
-        }
-        
-        /* Loading animation */
+        /* Loading pulse animation */
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            }
+            50% { 
+                box-shadow: 0 4px 25px rgba(102, 126, 234, 0.8);
+            }
         }
         
         .loading {
             animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width:480px){
+            .audio-player {
+                top: 10px;
+                right: 10px;
+                width: 55px;
+                height: 55px;
+            }
+            .audio-control {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
+    
+    <!-- Audio Player - Upper right corner -->
+    <div class="audio-player" id="audioPlayer" title="Click to play/pause audio">
+        <button class="audio-control" id="playPauseBtn" aria-label="Play/Pause audio">▶️</button>
+    </div>
+    
     <div class="container">
+        <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" alt="Welcome" class="welcome-image">
+        
         <a href="https://sites.google.com/view/bhadrak-tihidi-paliabindhaa/%E0%AC%86%E0%AC%AE-%E0%AC%B6%E0%AC%95%E0%AC%B7" class="btn btn-education">
             <span class="btn-icon">📚</span>
             <span class="btn-text">
@@ -133,134 +137,150 @@
             </span>
         </a>
     </div>
-    
-    <!-- Audio Player - Now always visible -->
-    <div class="audio-player" id="audioPlayer">
-        <button class="audio-control" id="playPauseBtn">▶️</button>
-        <div class="audio-info" id="audioInfo">Click play to start</div>
-        <div class="audio-progress">
-            <div class="audio-progress-bar" id="progressBar"></div>
-        </div>
-    </div>
 
     <script>
-        // Audio configuration - REPLACE THIS URL WITH YOUR ACTUAL GITHUB AUDIO URL
-        const audioUrl = 'https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3'; // Replace with your actual GitHub audio URL
+        // Audio configuration
+        const audioUrl = 'https://github.com/eguruOdisha/FRONT/raw/main/ospage1.mp3';
         
         const audioPlayer = document.getElementById('audioPlayer');
         const playPauseBtn = document.getElementById('playPauseBtn');
-        const audioInfo = document.getElementById('audioInfo');
-        const progressBar = document.getElementById('progressBar');
         
-        // Create audio element
+        // Create audio element with better mobile support
         const audio = new Audio();
-        audio.src = audioUrl;
+        audio.crossOrigin = "anonymous";
         audio.preload = 'auto';
         
-        // Track if audio is playing
+        // Track state
         let isPlaying = false;
-        let hasInteracted = false;
+        let isLoading = false;
         
-        // Function to update progress bar
-        function updateProgress() {
-            if (audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progress}%`;
+        // Function to initialize audio
+        function initAudio() {
+            if (!audio.src) {
+                audio.src = audioUrl;
+                isLoading = true;
+                playPauseBtn.classList.add('loading');
             }
         }
         
         // Function to toggle play/pause
-        function togglePlayPause() {
-            hasInteracted = true;
+        function togglePlayPause(e) {
+            e.stopPropagation();
+            
+            // Initialize audio on first interaction
+            if (!audio.src) {
+                initAudio();
+            }
             
             if (isPlaying) {
                 audio.pause();
                 playPauseBtn.textContent = '▶️';
-                audioInfo.textContent = 'Paused';
+                audioPlayer.title = 'Click to play audio';
+                isPlaying = false;
             } else {
-                audio.play().catch(e => {
-                    console.error('Audio playback failed:', e);
-                    audioInfo.textContent = 'Playback failed - Click play';
-                });
-                playPauseBtn.textContent = '⏸️';
-                audioInfo.textContent = 'Playing...';
+                // Attempt to play
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        playPauseBtn.textContent = '⏸️';
+                        audioPlayer.title = 'Click to pause audio';
+                        isPlaying = true;
+                    }).catch(error => {
+                        console.error('Playback failed:', error);
+                        playPauseBtn.textContent = '▶️';
+                        audioPlayer.title = 'Click to play audio (failed - try again)';
+                        isPlaying = false;
+                        
+                        // Retry loading audio
+                        audio.load();
+                    });
+                }
             }
-            isPlaying = !isPlaying;
         }
         
         // Event listeners for audio
         audio.addEventListener('loadeddata', () => {
-            audioInfo.textContent = 'Ready to play';
-            audioPlayer.classList.remove('loading');
+            isLoading = false;
+            playPauseBtn.classList.remove('loading');
+            audioPlayer.title = 'Click to play audio';
         });
         
         audio.addEventListener('loadstart', () => {
-            audioInfo.textContent = 'Loading audio...';
-            audioPlayer.classList.add('loading');
+            isLoading = true;
+            playPauseBtn.classList.add('loading');
         });
         
-        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('canplay', () => {
+            isLoading = false;
+            playPauseBtn.classList.remove('loading');
+        });
         
         audio.addEventListener('ended', () => {
             isPlaying = false;
             playPauseBtn.textContent = '▶️';
-            progressBar.style.width = '0%';
-            audioInfo.textContent = 'Finished - Click to replay';
+            audioPlayer.title = 'Click to replay audio';
+            // Auto replay
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Auto-replay prevented'));
         });
         
         audio.addEventListener('error', (e) => {
             console.error('Audio error:', e);
-            audioInfo.textContent = 'Error loading audio';
-            audioPlayer.classList.remove('loading');
+            isLoading = false;
+            playPauseBtn.classList.remove('loading');
+            playPauseBtn.textContent = '▶️';
+            audioPlayer.title = 'Audio error - click to retry';
+        });
+        
+        audio.addEventListener('pause', () => {
+            if (isPlaying) {
+                playPauseBtn.textContent = '▶️';
+                isPlaying = false;
+            }
+        });
+        
+        audio.addEventListener('play', () => {
+            playPauseBtn.textContent = '⏸️';
+            isPlaying = true;
         });
         
         // Play/pause button click
         playPauseBtn.addEventListener('click', togglePlayPause);
+        audioPlayer.addEventListener('click', togglePlayPause);
         
-        // Auto-play when page is visible (with user interaction requirement)
-        document.addEventListener('click', function firstInteraction() {
-            if (!hasInteracted) {
-                // Try to play audio automatically after first user interaction
-                setTimeout(() => {
-                    audio.play().then(() => {
-                        isPlaying = true;
-                        playPauseBtn.textContent = '⏸️';
-                        audioInfo.textContent = 'Playing...';
-                    }).catch(e => {
-                        console.log('Autoplay prevented, waiting for user interaction');
-                        audioInfo.textContent = 'Click play to start';
-                    });
-                }, 500);
-                
-                // Remove this event listener after first interaction
-                document.removeEventListener('click', firstInteraction);
-            }
-        });
-        
-        // Stop audio when page is hidden (tab switch, minimize, etc.)
+        // Stop audio when page is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && isPlaying) {
                 audio.pause();
-                isPlaying = false;
-                playPauseBtn.textContent = '▶️';
-                audioInfo.textContent = 'Paused (tab hidden)';
             }
         });
         
-        // Stop audio when page is about to be unloaded
+        // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            audio.pause();
-            audio.currentTime = 0;
-        });
-        
-        // Progress bar click to seek
-        progressBar.parentElement.addEventListener('click', (e) => {
-            if (audio.duration) {
-                const rect = e.target.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                audio.currentTime = percent * audio.duration;
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
             }
         });
+        
+        // Initialize audio on first user interaction (for mobile)
+        let firstInteraction = true;
+        document.addEventListener('touchstart', function init() {
+            if (firstInteraction) {
+                initAudio();
+                firstInteraction = false;
+                document.removeEventListener('touchstart', init);
+            }
+        }, { once: true });
+        
+        document.addEventListener('click', function init() {
+            if (firstInteraction) {
+                initAudio();
+                firstInteraction = false;
+                document.removeEventListener('click', init);
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
