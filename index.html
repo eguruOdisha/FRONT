@@ -287,7 +287,7 @@
                  loading="eager">
         </div>
         
-        <a href="education.html" class="btn btn-education" target="_blank" rel="noopener noreferrer">
+        <a href="#" class="btn btn-education" onclick="openEducationPage(event)">
             <span class="btn-icon">📚</span>
             <span class="btn-content">
                 <span class="btn-title">Educational Help</span>
@@ -295,7 +295,7 @@
             </span>
         </a>
         
-        <a href="social.html" class="btn btn-social" target="_blank" rel="noopener noreferrer">
+        <a href="#" class="btn btn-social" onclick="openSocialPage(event)">
             <span class="btn-icon">🤝</span>
             <span class="btn-content">
                 <span class="btn-title">Social Help</span>
@@ -391,6 +391,24 @@
         }
         
         initAudioManager();
+        
+        // Page URLs - UPDATE THESE WITH YOUR ACTUAL WEB PAGE URLs
+        const pageUrls = {
+            education: 'https://sites.google.com/view/ospage2/connected-with-os-1',  // Replace with your actual education page URL
+            social: 'https://sites.google.com/view/ospage2/connected-with-os-2'          // Replace with your actual social page URL
+        };
+        
+        // Open education page in new window
+        function openEducationPage(event) {
+            event.preventDefault();
+            window.open(pageUrls.education, '_blank', 'noopener,noreferrer');
+        }
+        
+        // Open social page in new window
+        function openSocialPage(event) {
+            event.preventDefault();
+            window.open(pageUrls.social, '_blank', 'noopener,noreferrer');
+        }
         
         // Pause audio when page hidden
         document.addEventListener('visibilitychange', () => {
