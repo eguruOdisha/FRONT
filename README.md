@@ -1,1 +1,1 @@
-This is Odisha e-Guru.
+This is entrance page of os.
