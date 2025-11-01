@@ -168,6 +168,14 @@
             50% { transform: translateY(-8px); }
         }
         
+        .image-fallback {
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
         /* Main Buttons */
         .btn {
             position: relative;
@@ -252,6 +260,23 @@
 </head>
 <body>
     <script>
+        // Prevent caching issues and handle back button
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        
+        // Handle browser back button properly
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+        
+        // Add particles
         for (let i = 0; i < 15; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
@@ -280,11 +305,13 @@
             </div>
         </div>
         
-        <div class="image-container">
-            <img src="https://github.com/eguruOdisha/FRONT/raw/main/welcome%20image.gif" 
+        <div class="image-container" id="imageContainer">
+            <img src="https://raw.githubusercontent.com/eguruOdisha/FRONT/main/welcome%20image.gif" 
                  alt="Welcome" 
                  class="welcome-image"
-                 loading="eager">
+                 id="welcomeImage"
+                 loading="lazy"
+                 crossorigin="anonymous">
         </div>
         
         <a href="#" class="btn btn-education" onclick="openEducationPage(event)">
@@ -305,6 +332,14 @@
     </div>
 
     <script>
+        // Image error handling
+        const welcomeImage = document.getElementById('welcomeImage');
+        const imageContainer = document.getElementById('imageContainer');
+        
+        welcomeImage.onerror = function() {
+            imageContainer.innerHTML = '<div class="image-fallback">🙏<br><br>ସ୍ୱାଗତ<br>Welcome</div>';
+        };
+        
         // Audio manager for home page
         const audioManager = {
             url: 'https://raw.githubusercontent.com/eguruOdisha/FRONT/main/ospage1.mp3',
@@ -314,7 +349,8 @@
             status: null,
             progress: null,
             isPlaying: false,
-            loaded: false
+            loaded: false,
+            hasError: false
         };
         
         // Initialize audio manager
@@ -324,8 +360,16 @@
             audioManager.status = document.getElementById('homeAudioStatus');
             audioManager.progress = document.getElementById('homeProgressBar');
             
+            // Check online status
+            if (!navigator.onLine) {
+                audioManager.status.textContent = 'Offline - Audio unavailable';
+                audioManager.icon.textContent = '📡';
+                audioManager.hasError = true;
+                return;
+            }
+            
             audioManager.audio.crossOrigin = 'anonymous';
-            audioManager.audio.preload = 'metadata';
+            audioManager.audio.preload = 'none'; // Only load when clicked
             
             // Event listeners
             audioManager.audio.addEventListener('loadstart', () => {
@@ -334,6 +378,7 @@
             
             audioManager.audio.addEventListener('canplay', () => {
                 audioManager.status.textContent = 'Tap to play';
+                audioManager.hasError = false;
             });
             
             audioManager.audio.addEventListener('timeupdate', () => {
@@ -367,12 +412,18 @@
             
             audioManager.audio.addEventListener('error', (e) => {
                 console.error('Audio error:', e);
+                audioManager.hasError = true;
                 audioManager.status.textContent = 'Audio unavailable';
                 audioManager.icon.textContent = '❌';
             });
             
             // Card click handler
             audioManager.card.addEventListener('click', () => {
+                if (audioManager.hasError) {
+                    audioManager.status.textContent = 'Cannot load audio';
+                    return;
+                }
+                
                 if (!audioManager.loaded) {
                     audioManager.audio.src = audioManager.url;
                     audioManager.audio.load();
@@ -384,18 +435,37 @@
                 } else {
                     audioManager.audio.play().catch(error => {
                         console.error('Playback failed:', error);
-                        audioManager.status.textContent = 'Error - Tap again';
+                        audioManager.status.textContent = 'Error - Check connection';
+                        audioManager.hasError = true;
                     });
                 }
             });
         }
         
+        // Online/offline detection
+        window.addEventListener('online', () => {
+            if (audioManager.hasError) {
+                audioManager.status.textContent = 'Tap to play';
+                audioManager.icon.textContent = '🔇';
+                audioManager.hasError = false;
+            }
+        });
+        
+        window.addEventListener('offline', () => {
+            if (audioManager.isPlaying) {
+                audioManager.audio.pause();
+            }
+            audioManager.status.textContent = 'Offline - Audio unavailable';
+            audioManager.icon.textContent = '📡';
+            audioManager.hasError = true;
+        });
+        
         initAudioManager();
         
         // Page URLs - UPDATE THESE WITH YOUR ACTUAL WEB PAGE URLs
         const pageUrls = {
-            education: 'https://sites.google.com/view/ospage2/connected-with-os-1',  // Replace with your actual education page URL
-            social: 'https://sites.google.com/view/ospage2/connected-with-os-2'          // Replace with your actual social page URL
+            education: 'https://sites.google.com/view/ospage2/connected-with-os-1',
+            social: 'https://sites.google.com/view/ospage2/connected-with-os-2'
         };
         
         // Open education page in new window
@@ -410,10 +480,26 @@
             window.open(pageUrls.social, '_blank', 'noopener,noreferrer');
         }
         
-        // Pause audio when page hidden
+        // Pause audio when page hidden or user navigates away
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && audioManager.isPlaying) {
                 audioManager.audio.pause();
+            }
+        });
+        
+        // Stop audio before page unload
+        window.addEventListener('beforeunload', () => {
+            if (audioManager.audio) {
+                audioManager.audio.pause();
+                audioManager.audio.src = '';
+            }
+        });
+        
+        // Handle page navigation properly
+        window.addEventListener('pagehide', () => {
+            if (audioManager.audio) {
+                audioManager.audio.pause();
+                audioManager.audio.src = '';
             }
         });
         
